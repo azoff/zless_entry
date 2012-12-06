@@ -1,0 +1,19 @@
+#!/usr/bin/env python
+
+import serial
+import requests
+
+endpoint = 'http://app.rentjuice.local/apc/auth'
+port     = '/dev/tty.usbmodemfd121'
+baudrate = 9600
+
+print "Starting proxy for port %s..." % port
+ser = serial.Serial(port, baudrate)
+
+while 1:
+	code     = ser.readline()
+	print "\nCode: %s" % code
+	response = requests.post(endpoint, params={'code': code})
+	print "Auth: %s" % response.text
+	ser.write(response.text)
+	print "\nDone!"
